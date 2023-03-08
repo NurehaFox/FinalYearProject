@@ -13,6 +13,8 @@ public class TowerManager : MonoBehaviour
 
     public LayerMask whatIsGround;
 
+
+
     void Awake(){
         instance = this;
     }
@@ -28,17 +30,20 @@ public class TowerManager : MonoBehaviour
         if(isPlacing){
 
             indicator.position = GetGridPosition();
-        }
+        
 
         //Place Tower
         if(Input.GetMouseButtonDown(0)){
 
+            if(MoneyManager.instance.SpendMoney(activeTower.cost))
+            {
             isPlacing = false;
 
             Instantiate(activeTower, indicator.position, activeTower.transform.rotation);
 
             indicator.gameObject.SetActive(false);
-
+            }
+        }
         }
     }
 
@@ -48,8 +53,13 @@ public class TowerManager : MonoBehaviour
             
             isPlacing = true;
 
-            indicator.gameObject.SetActive(true);
+            Destroy(indicator.gameObject);
+            Tower placeTower = Instantiate(activeTower);
+            placeTower.enabled = false;
+            indicator = placeTower.transform;
 
+            placeTower.rangeModel.SetActive(true);
+            placeTower.rangeModel.transform.localScale = new Vector3(placeTower.range, 1f, placeTower.range);
           
             
     }
@@ -62,13 +72,13 @@ public class TowerManager : MonoBehaviour
 
         Debug.DrawRay(ray.origin, ray.direction * 200f, Color.red);
 
-    //    RaycastHit hit;
-      //  if(Physics.Raycast(ray, out hit, 200f, whatIsGround)){
+       RaycastHit hit;
+        if(Physics.Raycast(ray, out hit, 200f, whatIsGround)){
 
-      //      location = hit.point;
-      //  }
+            location = hit.point;
+        }
 
-      //  location.y = 0f;
+       location.y = 0f;
 
         return location;
 

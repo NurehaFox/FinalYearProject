@@ -9,6 +9,8 @@ public class EnemyHealth : MonoBehaviour
     public float totalHealth;
 
     public Slider healthBar;
+
+    public int money = 50;
     // Start is called before the first frame update
     void Start()
     {
@@ -31,6 +33,8 @@ public class EnemyHealth : MonoBehaviour
             totalHealth = 0;
 
             Destroy(gameObject);     
+
+            MoneyManager.instance.GiveMoney(money);
         }
 
          healthBar.value = totalHealth;
